@@ -273,6 +273,7 @@ mod wazero {
             assert_transfer(&events[0], None, Some(alice), amount);
             assert_transfer(&events[1], None, Some(bob), 2 * amount);
         }
+
         #[ink::test]
         fn withdraw_works() {
             let amount = 100;
@@ -331,6 +332,7 @@ mod wazero {
                 Err(PSP22Error::InsufficientBalance)
             );
         }
+
         #[ink::test]
         fn multiple_withdraw_works_and_emits_events() {
             let amount = 100;
