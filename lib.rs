@@ -76,7 +76,7 @@ mod wazero {
             let events = self.data.burn(caller, value)?;
             self.env()
                 .transfer(caller, value)
-                .map_err(|_| PSP22Error::Custom(String::from("WrappedAZERO: withdraw failed")))?;
+                .map_err(|_| PSP22Error::Custom(String::from("Wrapped AZERO: withdraw failed")))?;
             self.emit_events(events);
             Ok(())
         }
@@ -85,7 +85,7 @@ mod wazero {
     impl PSP22Metadata for Wazero {
         #[ink(message)]
         fn token_name(&self) -> Option<String> {
-            Some(String::from("WrappedAZERO"))
+            Some(String::from("Wrapped AZERO"))
         }
 
         #[ink(message)]
@@ -192,7 +192,7 @@ mod wazero {
         #[ink::test]
         fn metadata_is_correct() {
             let contract = Wazero::new();
-            assert_eq!(contract.token_name(), Some(String::from("WrappedAZERO")));
+            assert_eq!(contract.token_name(), Some(String::from("Wrapped AZERO")));
             assert_eq!(contract.token_symbol(), Some(String::from("wAZERO")));
             assert_eq!(contract.token_decimals(), 12);
         }
@@ -203,7 +203,7 @@ mod wazero {
             let amount = 100;
             let alice = default_accounts::<E>().alice;
             set_caller::<E>(alice);
-            transfer_in::<E>(amount);
+            set_value_transferred::<E>(amount);
 
             assert_eq!(contract.total_supply(), 0);
             assert_eq!(contract.balance_of(alice), 0);
@@ -220,7 +220,7 @@ mod wazero {
             let amount = 100;
             let alice = default_accounts::<E>().alice;
             set_caller::<E>(alice);
-            transfer_in::<E>(amount);
+            set_value_transferred::<E>(amount);
 
             assert!(contract.deposit().is_ok());
 
@@ -253,7 +253,7 @@ mod wazero {
             assert_eq!(contract.balance_of(bob), 0);
 
             set_caller::<E>(alice);
-            transfer_in::<E>(amount);
+            set_value_transferred::<E>(amount);
             assert!(contract.deposit().is_ok());
 
             assert_eq!(contract.total_supply(), amount);
@@ -261,7 +261,7 @@ mod wazero {
             assert_eq!(contract.balance_of(bob), 0);
 
             set_caller::<E>(bob);
-            transfer_in::<E>(2 * amount);
+            set_value_transferred::<E>(2 * amount);
             assert!(contract.deposit().is_ok());
 
             assert_eq!(contract.total_supply(), 3 * amount);
@@ -276,35 +276,35 @@ mod wazero {
 
         #[ink::test]
         fn withdraw_works() {
-            let amount = 100;
+            let (supply, amount) = (1000, 100);
             let alice = default_accounts::<E>().alice;
             set_caller::<E>(alice);
-            let mut contract = init_psp22_supply(3 * amount);
+            let mut contract = init_psp22_supply(supply);
 
-            assert_eq!(contract.total_supply(), 3 * amount);
-            assert_eq!(contract.balance_of(alice), 3 * amount);
+            assert_eq!(contract.total_supply(), supply);
+            assert_eq!(contract.balance_of(alice), supply);
 
             let old_native = get_account_balance::<E>(alice).unwrap();
             assert!(contract.withdraw(amount).is_ok());
             let new_native = get_account_balance::<E>(alice).unwrap();
 
-            assert_eq!(contract.total_supply(), 2 * amount);
-            assert_eq!(contract.balance_of(alice), 2 * amount);
+            assert_eq!(contract.total_supply(), supply - amount);
+            assert_eq!(contract.balance_of(alice), supply - amount);
             assert_eq!(new_native - old_native, amount);
         }
 
         #[ink::test]
         fn withdraw_emits_event() {
-            let amount = 100;
+            let (supply, amount) = (1000, 100);
             let alice = default_accounts::<E>().alice;
             set_caller::<E>(alice);
-            let mut contract = init_psp22_supply(3 * amount);
+            let mut contract = init_psp22_supply(supply);
 
             assert!(contract.withdraw(amount).is_ok());
 
             let events = decode_events();
             assert_eq!(events.len(), 2);
-            assert_transfer(&events[0], None, Some(alice), 3 * amount);
+            assert_transfer(&events[0], None, Some(alice), supply);
             assert_transfer(&events[1], Some(alice), None, amount);
         }
 
@@ -335,35 +335,37 @@ mod wazero {
 
         #[ink::test]
         fn multiple_withdraw_works_and_emits_events() {
-            let amount = 100;
-            let (alice, bob) = (default_accounts::<E>().alice, default_accounts::<E>().bob);
+            let (initial, a, b) = (1000, 100, 10);
+            let alice = default_accounts::<E>().alice;
+            let bob = default_accounts::<E>().bob;
             set_caller::<E>(alice);
-            let mut contract = init_psp22_supply(5 * amount);
+            set_callee::<E>(default_accounts::<E>().charlie);
+            let mut contract = init_psp22_supply(2 * initial);
 
-            assert!(contract.transfer(bob, 2 * amount, vec![]).is_ok());
+            assert!(contract.transfer(bob, initial, vec![]).is_ok());
 
             let old_alice = get_account_balance::<E>(alice).unwrap();
             let old_bob = get_account_balance::<E>(bob).unwrap();
 
-            assert!(contract.withdraw(2 * amount).is_ok());
+            assert!(contract.withdraw(a).is_ok());
             set_caller::<E>(bob);
-            assert!(contract.withdraw(amount).is_ok());
+            assert!(contract.withdraw(b).is_ok());
 
             let new_alice = get_account_balance::<E>(alice).unwrap();
             let new_bob = get_account_balance::<E>(bob).unwrap();
 
-            assert_eq!(contract.total_supply(), 2 * amount);
-            assert_eq!(contract.balance_of(alice), amount);
-            assert_eq!(contract.balance_of(bob), amount);
-            assert_eq!(new_alice - old_alice, amount);
-            assert_eq!(new_bob - old_bob, amount);
+            assert_eq!(contract.total_supply(), 2 * initial - a - b);
+            assert_eq!(contract.balance_of(alice), initial - a);
+            assert_eq!(contract.balance_of(bob), initial - b);
+            assert_eq!(new_alice - old_alice, a);
+            assert_eq!(new_bob - old_bob, b);
 
             let events = decode_events();
             assert_eq!(events.len(), 4);
-            assert_transfer(&events[0], None, Some(alice), 5 * amount);
-            assert_transfer(&events[1], Some(alice), Some(bob), 2 * amount);
-            assert_transfer(&events[2], Some(alice), None, 2 * amount);
-            assert_transfer(&events[3], Some(bob), None, amount);
+            assert_transfer(&events[0], None, Some(alice), 2 * initial);
+            assert_transfer(&events[1], Some(alice), Some(bob), initial);
+            assert_transfer(&events[2], Some(alice), None, a);
+            assert_transfer(&events[3], Some(bob), None, b);
         }
 
         // Unit tests helpers
@@ -373,7 +375,7 @@ mod wazero {
         // Creates a new contract with given total supply
         fn init_psp22_supply(amount: u128) -> Wazero {
             let mut contract = Wazero::new();
-            transfer_in::<E>(amount);
+            set_value_transferred::<E>(amount);
             contract.deposit().unwrap();
             contract
         }
