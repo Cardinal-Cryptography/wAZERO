@@ -22,6 +22,9 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
+      - name: Install Rust toolchain
+        uses: Cardinal-Cryptography/github-actions/install-rust-toolchain@v1
+
       - name: Run cargo fmt
         uses: actions-rs/cargo@v1
         with:
@@ -51,11 +54,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cargo
-          key: ${{ runner.os }}-contract-build-env
+          key: ${{ runner.os }}-contract-build-env-${{ hashFiles('rust-toolchain.toml') }}
 
-      - name: Add rust-src
-        shell: bash
-        run: rustup component add rust-src
+      - name: Install Rust toolchain
+        uses: Cardinal-Cryptography/github-actions/install-rust-toolchain@v1
 
       - name: Install cargo contract
         uses: actions-rs/cargo@v1
