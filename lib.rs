@@ -4,7 +4,7 @@ mod traits;
 
 // Re-export of PSP22 traits for convenience of cross-contract calls
 pub use psp22::{PSP22Metadata, PSP22};
-pub use traits::WrappedAZERO;
+pub use traits::{WrappedAZERO, MAINNET, TESTNET};
 
 #[ink::contract]
 mod wazero {
