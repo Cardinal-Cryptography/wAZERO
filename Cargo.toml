@@ -22,7 +22,7 @@ psp22 = { version = "0.2.2", default-features = false }
 path = "lib.rs"
 
 [features]
-default = ["std"]
+default = ["std", "contract"]
 std = [
     "ink/std",
     "scale/std",
