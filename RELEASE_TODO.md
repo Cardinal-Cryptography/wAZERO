@@ -1,6 +1,6 @@
 The release procedure:
 
-1. Compile the current version of the crate with `cargo contract build --release --features "contract"`, optionally using one of dockerized build environments.
+1. Compile the current version of the crate within a dockerized build environment.
 2. Deploy contracts to Testnet and Mainnet.
 3. Prepare a release PR which:
     a. Inserts deployed addresses in `traits.rs` and `README.md`,
