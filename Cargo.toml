@@ -29,4 +29,5 @@ std = [
     "scale-info/std",
     "psp22/std",
 ]
+contract = []
 ink-as-dependency = []
