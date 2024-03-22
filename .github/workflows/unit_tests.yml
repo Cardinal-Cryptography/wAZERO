@@ -41,6 +41,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
+          args: --features "contract"
 
   build:
     name: Build the contract
@@ -69,4 +70,4 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: contract
-          args: build --release
+          args: build --release --features "contract"

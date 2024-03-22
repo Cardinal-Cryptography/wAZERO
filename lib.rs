@@ -3,7 +3,7 @@
 mod traits;
 
 // Re-export of PSP22 stuff for convenience of cross-contract calls
-pub use psp22::{PSP22Error, PSP22Metadata, PSP22};
+pub use psp22::{PSP22Error, PSP22};
 
 pub use traits::{WrappedAZERO, MAINNET, TESTNET};
 
