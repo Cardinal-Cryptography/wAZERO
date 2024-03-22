@@ -11,7 +11,7 @@ description = "Smart contract for AZERO coin wrapped as a PSP22 token"
 exclude = [ ".github/*" ]
 
 [dependencies]
-ink = { version = "4.3.0", default-features = false }
+ink = { version = "=4.3.0", default-features = false }
 
 scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.9", default-features = false, features = ["derive"], optional = true }
