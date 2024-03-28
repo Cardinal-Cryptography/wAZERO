@@ -2,8 +2,12 @@
 
 mod traits;
 
-pub use traits::WrappedAZERO;
+// Re-export of PSP22 stuff for convenience of cross-contract calls
+pub use psp22::{PSP22Error, PSP22};
 
+pub use traits::{WrappedAZERO, MAINNET, TESTNET};
+
+#[cfg(feature = "contract")]
 #[ink::contract]
 mod wazero {
     use crate::WrappedAZERO;

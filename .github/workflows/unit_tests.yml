@@ -22,9 +22,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Install Rust toolchain
-        uses: Cardinal-Cryptography/github-actions/install-rust-toolchain@v1
-
       - name: Run cargo fmt
         uses: actions-rs/cargo@v1
         with:
@@ -38,9 +35,7 @@ jobs:
           args: --all-targets -- --no-deps -D warnings
 
       - name: Run unit tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
+        run: make test
 
   build:
     name: Build the contract
@@ -50,23 +45,5 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Cache Crates
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-contract-build-env-${{ hashFiles('rust-toolchain.toml') }}
-
-      - name: Install Rust toolchain
-        uses: Cardinal-Cryptography/github-actions/install-rust-toolchain@v1
-
-      - name: Install cargo contract
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: --locked cargo-contract
-
       - name: Build contract
-        uses: actions-rs/cargo@v1
-        with:
-          command: contract
-          args: build --release
+        run: make build

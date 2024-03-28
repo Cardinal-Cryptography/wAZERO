@@ -31,3 +31,8 @@ pub trait WrappedAZERO {
     #[ink(message)]
     fn withdraw(&mut self, value: u128) -> Result<(), PSP22Error>;
 }
+
+/// Mainnet deployment address
+pub const MAINNET: &str = "TODO";
+/// Testnet deployment address
+pub const TESTNET: &str = "TODO";
