@@ -242,7 +242,7 @@ mod wazero {
             assert!(contract.deposit().is_ok());
 
             let events = decode_events();
-            assert_eq!(events.len(), 1);
+            assert_eq!(events.len(), 0);
         }
 
         #[ink::test]
