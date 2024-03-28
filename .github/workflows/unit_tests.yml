@@ -35,9 +35,7 @@ jobs:
           args: --all-targets -- --no-deps -D warnings
 
       - name: Run unit tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
+        run: make test
 
   build:
     name: Build the contract
@@ -47,24 +45,5 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Cache Crates
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-contract-build-env
-
-      - name: Add rust-src
-        shell: bash
-        run: rustup component add rust-src
-
-      - name: Install cargo contract
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: cargo-contract --version 3.2.0
-
       - name: Build contract
-        uses: actions-rs/cargo@v1
-        with:
-          command: contract
-          args: build --release
+        run: make build
