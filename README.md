@@ -14,7 +14,7 @@ The contents of this repository has been published to [crates.io][wazero-crates]
 
 1. Add the [wrapped-azero][wazero-crates] dependency in your project's `Cargo.toml`:
 ```TOML
-wrapped-azero = { version = "1.0", default-features = false }
+wrapped-azero = { version = "1.0", default-features = false, features = ["ink-as-dependency"] }
 # ...
 [features]
 # ...

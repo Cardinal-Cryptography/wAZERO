@@ -7,7 +7,6 @@ pub use psp22::{PSP22Error, PSP22};
 
 pub use traits::{WrappedAZERO, MAINNET, TESTNET};
 
-#[cfg(feature = "contract")]
 #[ink::contract]
 mod wazero {
     use crate::WrappedAZERO;
