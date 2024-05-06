@@ -33,6 +33,6 @@ pub trait WrappedAZERO {
 }
 
 /// Mainnet deployment address
-pub const MAINNET: &str = "TODO";
+pub const MAINNET: &str = "5CtuFVgEUz13SFPVY6s2cZrnLDEkxQXc19aXrNARwEBeCXgg";
 /// Testnet deployment address
-pub const TESTNET: &str = "TODO";
+pub const TESTNET: &str = "5EFDb7mKbougLtr5dnwd5KDfZ3wK55JPGPLiryKq4uRMPR46";

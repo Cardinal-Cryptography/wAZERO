@@ -3,8 +3,8 @@
 This repository contains an [ink!][ink] smart contract for [Aleph Zero][aleph] blockchain which enables wrapping the native chain coin (AZERO) into a fungible token following [PSP22][psp22] standard.
 
 The contract is deployed to both test and main networks under the following addresses:
- - Aleph Zero Mainnet: `[TODO]`
- - Aleph Zero Testnet: `[TODO]`
+ - Aleph Zero Mainnet: `5CtuFVgEUz13SFPVY6s2cZrnLDEkxQXc19aXrNARwEBeCXgg`
+ - Aleph Zero Testnet: `5EFDb7mKbougLtr5dnwd5KDfZ3wK55JPGPLiryKq4uRMPR46`
 
 The [`artifacts`][artifacts] folder contains the exact compiled binary that has been deployed, as well as all other compilation artifacts for verification purposes.
 
