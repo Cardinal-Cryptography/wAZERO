@@ -20,19 +20,17 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+        shell: bash
+        run: |
+          cargo fmt --all -- --check
 
       - name: Run clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all-targets -- --no-deps -D warnings
+        shell: bash
+        run: |
+          cargo clippy --all-targets -- --no-deps -D warnings
 
       - name: Run unit tests
         run: make test
@@ -43,7 +41,7 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build contract
         run: make build
